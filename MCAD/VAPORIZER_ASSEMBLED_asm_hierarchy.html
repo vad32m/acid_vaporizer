@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>A2P assembly hierarchy visualization</title>
+</head>
+<body>
+<div class="mermaid">
+graph TD
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> ENCLOSURE_BOTTOM_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> ENCLOSURE_BOTTOM_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> M3x5-Screw_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> M3x5-Screw_002
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> M3x5-Screw_003
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> M3x5-Screw_004
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> acid_vaporizer1_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> acid_vaporizer1_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- plane --> acid_vaporizer1_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- plane --> ENCLOSURE_SIDE_A_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- axial --> ENCLOSURE_SIDE_A_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- plane --> ENCLOSURE_SIDE_B_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- plane --> ENCLOSURE_SIDE_B_001
+ENCLOSURE_TOP_001(ENCLOSURE_TOP_001<br>*FIXED*) -- plane --> ENCLOSURE_SIDE_B_001
+ENCLOSURE_BOTTOM_001
+M3x5-Screw_001 -- pointOnPlane --> acid_vaporizer1_001
+M3x5-Screw_002 -- pointOnPlane --> acid_vaporizer1_001
+M3x5-Screw_003 -- pointOnPlane --> acid_vaporizer1_001
+M3x5-Screw_004 -- pointOnPlane --> acid_vaporizer1_001
+acid_vaporizer1_001 -- plane --> CA9MA39_001
+CA9MA39_001
+ENCLOSURE_SIDE_A_001 -- axial --> BUTTON_ASSEMBLED_001
+ENCLOSURE_SIDE_A_001 -- plane --> BUTTON_ASSEMBLED_001
+ENCLOSURE_SIDE_A_001 -- axial --> FIX-GR-39_001
+ENCLOSURE_SIDE_A_001 -- plane --> FIX-GR-39_001
+BUTTON_ASSEMBLED_001
+FIX-GR-39_001
+ENCLOSURE_SIDE_B_001 -- axial --> FIX-GR-35_001
+ENCLOSURE_SIDE_B_001 -- plane --> FIX-GR-35_001
+ENCLOSURE_SIDE_B_001 -- axial --> FIX-GR-39_002
+ENCLOSURE_SIDE_B_001 -- planesParallel --> FIX-GR-39_002
+ENCLOSURE_SIDE_B_001 -- plane --> FIX-GR-39_002
+FIX-GR-35_001
+FIX-GR-39_002
+</div>
+    <script src="https://unpkg.com/mermaid@7.1.2/dist/mermaid.js"></script>
+    <script>
+        mermaid.initialize({startOnLoad: true});
+    </script>
+</body></html>
