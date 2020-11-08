@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name acid_vaporizer-cache)(type Legacy)(uri ${KIPRJMOD}/acid_vaporizer-cache.lib)(options "")(descr "")(disabled))
+)

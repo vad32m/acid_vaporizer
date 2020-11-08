@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name acid_vaporizer)(type KiCad)(uri ${KIPRJMOD}/acid_vaporizer.pretty)(options "")(descr ""))
+)
