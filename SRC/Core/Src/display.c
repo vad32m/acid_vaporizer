@@ -18,6 +18,7 @@
 //                ----
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include "stm32f0xx_ll_gpio.h"
 #include "stm32f0xx_ll_spi.h"
@@ -67,12 +68,31 @@ static uint8_t digits[DIGITS];
 
 static uint8_t currentDigitIdx = 0;
 
+static bool isBlinking = false;
+
 void TIM14_IRQHandler(void)
 {
+	static bool displayOn;
+	static uint8_t ticks;
+
 	LL_GPIO_ResetOutputPin(GPIOA, digitEnablePins[currentDigitIdx]);
-	currentDigitIdx = (currentDigitIdx + 1) % DIGITS;
-	LL_SPI_TransmitData8(SPI1, digitBitmaps[digits[currentDigitIdx]]);
-	LL_GPIO_SetOutputPin(GPIOA, digitEnablePins[currentDigitIdx]);
+
+	//blink once in a second
+	ticks = (ticks + 1) % 250;
+
+	//duty cycle is 50% - 0.5 sec on and 0.5 sec off
+	if (ticks == 0) {
+		displayOn = true;
+	} else if (ticks == 125) {
+		displayOn = false;
+	}
+
+	if (!isBlinking || displayOn)
+	{
+		currentDigitIdx = (currentDigitIdx + 1) % DIGITS;
+		LL_SPI_TransmitData8(SPI1, digitBitmaps[digits[currentDigitIdx]]);
+		LL_GPIO_SetOutputPin(GPIOA, digitEnablePins[currentDigitIdx]);
+	}
 
 	LL_TIM_ClearFlag_UPDATE(TIM14);
 }
@@ -109,4 +129,14 @@ void DISPLAY_SetNumber(uint16_t number)
 		digits[Idx] = CurrentDigit;
 		number = number / 10;
 	}
+}
+
+void DISPLAY_StartBlinking(void)
+{
+	isBlinking = true;
+}
+
+void DISPLAY_StopBlinking(void)
+{
+	isBlinking = false;
 }
