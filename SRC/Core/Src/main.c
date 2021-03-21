@@ -112,7 +112,10 @@ int main(void)
     LL_mDelay(2000);
     DISPLAY_StartBlinking();
     LL_mDelay(5000);
-    DISPLAY_StopBlinking();
+	DISPLAY_SetError();
+    LL_mDelay(2000);
+	DISPLAY_StopBlinking();
+
     i++;
     /* USER CODE END WHILE */
 

@@ -14,6 +14,8 @@ void DISPLAY_Init(void);
 
 void DISPLAY_SetNumber(uint16_t number);
 
+void DISPLAY_SetError(void);
+
 void DISPLAY_StartBlinking(void);
 
 void DISPLAY_StopBlinking(void);

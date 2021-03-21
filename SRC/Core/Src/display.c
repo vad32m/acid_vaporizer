@@ -46,6 +46,9 @@
 #define DIGIT_8  (SEG_A | SEG_B | SEG_C | SEG_D | SEG_E | SEG_F | SEG_G)
 #define DIGIT_9  (SEG_A | SEG_B | SEG_C | SEG_D | SEG_F | SEG_G)
 
+#define SYMBOL_E  (SEG_A | SEG_D | SEG_E | SEG_F | SEG_G)
+#define SYMBOL_r  (SEG_E | SEG_G)
+
 static const uint8_t digitBitmaps[] = {
 		DIGIT_0,
 		DIGIT_1,
@@ -90,7 +93,7 @@ void TIM14_IRQHandler(void)
 	if (!isBlinking || displayOn)
 	{
 		currentDigitIdx = (currentDigitIdx + 1) % DIGITS;
-		LL_SPI_TransmitData8(SPI1, digitBitmaps[digits[currentDigitIdx]]);
+		LL_SPI_TransmitData8(SPI1, digits[currentDigitIdx]);
 		LL_GPIO_SetOutputPin(GPIOA, digitEnablePins[currentDigitIdx]);
 	}
 
@@ -100,7 +103,7 @@ void TIM14_IRQHandler(void)
 void DISPLAY_Init(void)
 {
 	LL_SPI_Enable(SPI1);
-	LL_SPI_SetBaudRatePrescaler(SPI1, LL_SPI_BAUDRATEPRESCALER_DIV256);
+	LL_SPI_SetBaudRatePrescaler(SPI1, LL_SPI_BAUDRATEPRESCALER_DIV8);
 
 	LL_TIM_SetClockSource(TIM14, LL_TIM_CLOCKSOURCE_INTERNAL);
 	//timer will be counting on 10 kHz frequency
@@ -126,9 +129,16 @@ void DISPLAY_SetNumber(uint16_t number)
 	for (uint8_t Idx = 0; Idx < DIGITS; Idx++)
 	{
 		uint8_t CurrentDigit = number % 10;
-		digits[Idx] = CurrentDigit;
+		digits[Idx] = digitBitmaps[CurrentDigit];
 		number = number / 10;
 	}
+}
+
+void DISPLAY_SetError(void)
+{
+	digits[2] = SYMBOL_E;
+	digits[1] = SYMBOL_r;
+	digits[0] = SYMBOL_r;
 }
 
 void DISPLAY_StartBlinking(void)
