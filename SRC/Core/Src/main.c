@@ -195,6 +195,8 @@ static void MX_ADC_Init(void)
   /**ADC GPIO Configuration
   PA0   ------> ADC_IN0
   PA1   ------> ADC_IN1
+  PA2   ------> ADC_IN2
+  PA3   ------> ADC_IN3
   */
   GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
@@ -202,6 +204,16 @@ static void MX_ADC_Init(void)
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+  GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
   GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
   LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
@@ -215,6 +227,12 @@ static void MX_ADC_Init(void)
   /** Configure Regular Channel
   */
   LL_ADC_REG_SetSequencerChAdd(ADC1, LL_ADC_CHANNEL_1);
+  /** Configure Regular Channel
+  */
+  LL_ADC_REG_SetSequencerChAdd(ADC1, LL_ADC_CHANNEL_2);
+  /** Configure Regular Channel
+  */
+  LL_ADC_REG_SetSequencerChAdd(ADC1, LL_ADC_CHANNEL_3);
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   */
   ADC_InitStruct.Clock = LL_ADC_CLOCK_ASYNC;
@@ -410,24 +428,6 @@ static void MX_GPIO_Init(void)
 
   /**/
   LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_10);
-
-  /**/
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  GPIO_InitStruct.Alternate = LL_GPIO_AF_1;
-  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /**/
-  GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
-  GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
-  GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
-  GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
-  GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-  GPIO_InitStruct.Alternate = LL_GPIO_AF_1;
-  LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /**/
   GPIO_InitStruct.Pin = LL_GPIO_PIN_6;
