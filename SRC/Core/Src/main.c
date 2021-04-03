@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "display.h"
+#include "sensors.h"
 
 /* USER CODE END Includes */
 
@@ -43,7 +44,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+SENSORS_Readings readings;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,6 +101,7 @@ int main(void)
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
   DISPLAY_Init();
+  SENSORS_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -107,17 +109,18 @@ int main(void)
   uint8_t i = 0;
   while (1)
   {
-    LL_mDelay(2000);
+    LL_mDelay(1000);
     DISPLAY_SetNumber(i);
-    LL_mDelay(2000);
-    DISPLAY_StartBlinking();
-    LL_mDelay(5000);
-	DISPLAY_SetError();
-    LL_mDelay(2000);
-	DISPLAY_StopBlinking();
+    //LL_mDelay(2000);
+    //DISPLAY_StartBlinking();
+    //LL_mDelay(5000);
+	//DISPLAY_SetError();
+    //LL_mDelay(2000);
+	//DISPLAY_StopBlinking();
 
     i++;
     /* USER CODE END WHILE */
+    readings = SENSORS_getReadings();
 
     /* USER CODE BEGIN 3 */
   }
