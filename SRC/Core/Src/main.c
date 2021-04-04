@@ -109,7 +109,7 @@ int main(void)
   uint8_t i = 0;
   while (1)
   {
-    LL_mDelay(1000);
+    LL_mDelay(400);
     DISPLAY_SetNumber(i);
     //LL_mDelay(2000);
     //DISPLAY_StartBlinking();

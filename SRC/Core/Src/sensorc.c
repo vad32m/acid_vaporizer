@@ -46,6 +46,12 @@ void SENSORS_init(void)
 	LL_ADC_SetResolution(ADC1, LL_ADC_RESOLUTION_12B);
 	LL_ADC_REG_SetDMATransfer(ADC1, LL_ADC_REG_DMA_TRANSFER_NONE);
 
+	LL_ADC_StartCalibration(ADC1);
+	while (LL_ADC_IsCalibrationOnGoing(ADC1))
+	{
+		LL_mDelay(10);
+	}
+
 	LL_ADC_SetDataAlignment(ADC1, LL_ADC_DATA_ALIGN_RIGHT);
 	//at thus point 4 MHz clock is fed into ADC
 
@@ -53,8 +59,6 @@ void SENSORS_init(void)
 	LL_ADC_SetSamplingTimeCommonChannels(ADC1, LL_ADC_SAMPLINGTIME_239CYCLES_5);
 	//samples are converted at approximately 16kHz frequency
 
-	//TODO: calibrate
-	//LL_ADC_StartCalibration(ADC1);
 
 	LL_ADC_REG_SetContinuousMode(ADC1, LL_ADC_REG_CONV_CONTINUOUS);
 
@@ -103,9 +107,11 @@ SENSORS_Readings SENSORS_getReadings(void)
 	coldJuction /= SAMPLE_COUNT;
 	coldJuction /= 2;
 
-	readings.coldJunctionTemp = coldJuction;
-	readings.potentiometerAngle = potentiometer;
-	readings.thermocoupleTemp = thermoCouple;
+	readings.coldJunctionTemp = (coldJuction - 500) / 10;
+
+	readings.potentiometerAngle = potentiometer / 33;
+
+	readings.thermocoupleTemp = thermoCouple / 10;
 
 	return readings;
 }
