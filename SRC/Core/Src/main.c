@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "display.h"
 #include "sensors.h"
+#include "load_control.h"
 
 /* USER CODE END Includes */
 
@@ -102,25 +103,25 @@ int main(void)
   /* USER CODE BEGIN 2 */
   DISPLAY_Init();
   SENSORS_init();
+  LOAD_CONTROL_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  uint8_t i = 0;
   while (1)
   {
-    LL_mDelay(400);
-    DISPLAY_SetNumber(i);
-    //LL_mDelay(2000);
-    //DISPLAY_StartBlinking();
-    //LL_mDelay(5000);
-	//DISPLAY_SetError();
-    //LL_mDelay(2000);
-	//DISPLAY_StopBlinking();
 
-    i++;
     /* USER CODE END WHILE */
     readings = SENSORS_getReadings();
+
+    LL_mDelay(400);
+    DISPLAY_SetNumber(readings.potentiometerAngle / 10);
+
+    if (readings.potentiometerAngle == 99)
+    {
+    	readings.potentiometerAngle++;
+    }
+    LOAD_CONTROL_setLoad(readings.potentiometerAngle);
 
     /* USER CODE BEGIN 3 */
   }
