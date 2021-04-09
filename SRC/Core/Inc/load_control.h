@@ -14,4 +14,6 @@ void LOAD_CONTROL_init(void);
 
 void LOAD_CONTROL_setLoad(uint8_t loadPercent);
 
+void LOAD_CONTROL_setCycleEndedCallback(void (*callback)(void));
+
 #endif /* INC_LOAD_CONTROL_H_ */

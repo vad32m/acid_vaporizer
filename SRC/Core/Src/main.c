@@ -45,7 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-SENSORS_Readings readings;
+uint16_t desiredTemp;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -61,7 +61,21 @@ static void MX_TIM14_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+static void onLoadCycleEnd(void)
+{
+	SENSORS_Readings readings;
+	uint16_t output = 0;
 
+	readings = SENSORS_getReadings();
+
+	if (desiredTemp > (readings.coldJunctionTemp + readings.thermocoupleTemp))
+	{
+		output = desiredTemp - readings.coldJunctionTemp;
+		output -= readings.thermocoupleTemp;
+	}
+
+	LOAD_CONTROL_setLoad(output);
+}
 /* USER CODE END 0 */
 
 /**
@@ -104,6 +118,36 @@ int main(void)
   DISPLAY_Init();
   SENSORS_init();
   LOAD_CONTROL_init();
+
+  uint8_t loopsWithoutChange = 0;
+  uint16_t potValue = 0;
+  SENSORS_Readings readings;
+
+  DISPLAY_StartBlinking();
+
+  while (loopsWithoutChange < 10)
+  {
+	  LL_mDelay(500);
+	  readings = SENSORS_getReadings();
+
+	  if (readings.potentiometerAngle == potValue)
+	  {
+		  loopsWithoutChange++;
+	  }
+	  else
+	  {
+		  loopsWithoutChange = 0;
+	  }
+
+	  potValue = readings.potentiometerAngle;
+	  DISPLAY_SetNumber(200 + potValue);
+  }
+
+  desiredTemp = 200 + potValue;
+
+  DISPLAY_StopBlinking();
+
+  LOAD_CONTROL_setCycleEndedCallback(onLoadCycleEnd);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,16 +156,8 @@ int main(void)
   {
 
     /* USER CODE END WHILE */
-    readings = SENSORS_getReadings();
-
-    LL_mDelay(400);
-    DISPLAY_SetNumber(readings.potentiometerAngle / 10);
-
-    if (readings.potentiometerAngle == 99)
-    {
-    	readings.potentiometerAngle++;
-    }
-    LOAD_CONTROL_setLoad(readings.potentiometerAngle);
+    LL_mDelay(1000);
+    DISPLAY_SetNumber(readings.thermocoupleTemp + readings.coldJunctionTemp);
 
     /* USER CODE BEGIN 3 */
   }
