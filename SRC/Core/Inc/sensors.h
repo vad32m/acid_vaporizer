@@ -12,7 +12,7 @@
 
 typedef struct
 {
-	uint16_t coldJunctionTemp;
+	int16_t coldJunctionTemp;
 	uint16_t thermocoupleTemp;
 	uint16_t potentiometerAngle;
 } SENSORS_Readings;

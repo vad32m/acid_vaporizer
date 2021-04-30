@@ -25,6 +25,7 @@
 #include "display.h"
 #include "sensors.h"
 #include "load_control.h"
+#include "pi_controller.h"
 
 /* USER CODE END Includes */
 
@@ -46,6 +47,7 @@
 
 /* USER CODE BEGIN PV */
 uint16_t desiredTemp;
+	SENSORS_Readings readings;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -63,15 +65,15 @@ static void MX_TIM14_Init(void);
 /* USER CODE BEGIN 0 */
 static void onLoadCycleEnd(void)
 {
-	SENSORS_Readings readings;
 	uint16_t output = 0;
 
 	readings = SENSORS_getReadings();
 
-	if (desiredTemp > (readings.coldJunctionTemp + readings.thermocoupleTemp))
+	output = PI_process(readings.coldJunctionTemp + readings.thermocoupleTemp);
+
+	if (output > UINT8_MAX)
 	{
-		output = desiredTemp - readings.coldJunctionTemp;
-		output -= readings.thermocoupleTemp;
+		output = UINT8_MAX;
 	}
 
 	LOAD_CONTROL_setLoad(output);
@@ -121,7 +123,6 @@ int main(void)
 
   uint8_t loopsWithoutChange = 0;
   uint16_t potValue = 0;
-  SENSORS_Readings readings;
 
   DISPLAY_StartBlinking();
 
@@ -130,7 +131,8 @@ int main(void)
 	  LL_mDelay(500);
 	  readings = SENSORS_getReadings();
 
-	  if (readings.potentiometerAngle == potValue)
+	  if ((readings.potentiometerAngle <= potValue + 1)
+		  && (readings.potentiometerAngle >= potValue - 1))
 	  {
 		  loopsWithoutChange++;
 	  }
@@ -145,7 +147,18 @@ int main(void)
 
   desiredTemp = 200 + potValue;
 
+  PI_params controllerParams =
+  {
+  		.desired = desiredTemp,
+		.integratorCoef = 0.1,
+		.proportionalCoef = 4.0,
+		.integratorMax = 250,
+		.integratorMin = -200,
+  };
+
   DISPLAY_StopBlinking();
+
+  PI_init(&controllerParams);
 
   LOAD_CONTROL_setCycleEndedCallback(onLoadCycleEnd);
   /* USER CODE END 2 */
